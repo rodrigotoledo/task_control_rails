@@ -11,7 +11,7 @@ Neste curso, vamos aprender a desenvolver uma aplicação web utilizando o frame
 ## Diferenciais do Curso:
 
 - Instalação e utilização do RVM para controle de versões do Ruby e gerenciamento de ambientes.
-- Implementação de manipulação de dados por meio de API, refletindo alterações em tempo real.
+- Implementação de manipulação de dados por meio de navegador e API, refletindo alterações em tempo real.
 - Cobertura completa de testes utilizando RSpec para garantir a qualidade do código.
 - Utilização do NGrok para expor o projeto para acesso externo, facilitando o desenvolvimento e integração com outras aplicações.
 
