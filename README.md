@@ -1,4 +1,4 @@
-# Curso: Desenvolvimento de Aplicações API com Ruby on Rails - Tasks Control
+# Curso: Desenvolvimento de Aplicações com Ruby on Rails - Tasks Control
 
 Neste curso, vamos aprender a desenvolver uma aplicação web utilizando o framework Ruby on Rails, denominada Tasks Control. Ao longo deste curso, abordaremos desde a instalação das tecnologias necessárias até a exposição do projeto para acesso externo utilizando o NGrok.
 
