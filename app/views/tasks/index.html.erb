@@ -9,6 +9,7 @@
   </div>
 
   <div id="tasks" class="min-w-full">
+    <%= turbo_stream_from :tasks %>
     <%= render @tasks %>
   </div>
 </div>
