@@ -538,19 +538,28 @@ Reinicie o servidor e o guard, rode novamente.
 ### 10. Colocando a navegação entre telas
 
 Como um extra, o código para navegar entre as telas será acrescentado.
-Basta acrescentar acima de de `main` no arquivo app/views/layouts/application.html.erb
+Primeiro acrescentamos a biblioteca de ícones font-awesome no cabeçalho do layout e depois a navegação.
+No arquivo app/views/layouts/application.html.erb dentro entre a tag `<head></head>` adicione:
+
+```html
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+```
+
+E para navegação acrescentar acima de de `<main></main>`
 
 ```html
 <nav class="bg-gray-800 p-4 text-white fixed w-full top-0">
   <div class="container mx-auto flex justify-between items-center">
     <%= link_to root_path, class: "text-lg font-bold" do %>
-      Home
+      <i class="fas fa-tasks m-2"></i>
     <% end %>
     <div class="flex space-x-4">
       <%= link_to tasks_path, class: "flex items-center space-x-2" do %>
+        <i class="fas fa-tasks mr-2"></i>
         Tasks
       <% end %>
       <%= link_to projects_path, class: "flex items-center space-x-2" do %>
+        <i class="fas fa-briefcase mr-2"></i>
         Projects
       <% end %>
     </div>
