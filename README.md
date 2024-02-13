@@ -420,7 +420,93 @@ Pronto, novamente com Guard executando aperte `Enter` a aplicacão e tudo será 
 
 Basta iniciar com `bin/dev`
 
-### 8. Segurança
+### 8. Broadcasting - Ações em tempo real
+
+Em Rails ações em tempo real sempre foi um tema a ser discutido. Qual seria a melhor proposta e de repente core do Rails veio com a idéia e solução chamada `broadcasting`.
+
+Em resumo, broadcasting em Rails é uma maneira de fornecer comunicação em tempo real entre o servidor e os clientes, utilizando tecnologias como WebSockets para enviar e receber mensagens instantaneamente.
+
+Começando com os models acrescentando:
+
+app/models/project.rb
+
+```ruby
+  broadcasts_refreshes # parte da magica acontece aqui
+  after_create :broadcast_create
+  private
+
+  def broadcast_create
+    broadcast_prepend_to self, target: "projects", partial: "projects/project", locals: { project: self } # outra parte aqui
+  end
+```
+
+As ações de criar, atualizar e excluir são ouvidas ao adicionar `broadcasts_refreshes`. A única diferença que temos é que ao criar precisamos inserir realmente em um determinado ponto de html no sistema.
+
+Então `broadcast_prepend_to self, target: "projects", partial: "projects/project", locals: { project: self }` está informando para fazer `prepend` ou seja inserir ao topo de um `target`, ou seja o identificador de broadcasting no sistema. Logo em seguida qual conteúdo será adicionado, justamente uma partial com o próprio objeto.
+
+Então duas mudanças ocorrerão na view:
+
+app/views/projects/index.html.erb
+
+```html
+  <div id="projects" class="min-w-full">
+    <%= turbo_stream_from :projects %>
+    <%= render @projects %>
+  </div>
+```
+
+O código `<%= turbo_stream_from :projects %>` servirá principalmente para acrescentar ao criar o objeto na lista.
+
+No início do arquivo app/views/projects/_project.html.erb
+
+```html
+<%= turbo_stream_from project %>
+```
+
+Isto garante que código no model `broadcasts_refreshes` em qualquer alteração que ocorra reflita sobre este objeto, ou seja, atualizando ou excluindo. O mesmo será feito sobre task.
+
+E para que o que for criado seja refletido no início da lista no controller app/controllers/projects_controller.rb vamos alterar o método `index`
+
+```ruby
+@projects = Project.order(created_at: :desc)
+```
+
+app/models/task.rb
+
+```ruby
+  broadcasts_refreshes # parte da magica acontece aqui
+  after_create :broadcast_create
+  private
+
+  def broadcast_create
+    broadcast_prepend_to self, target: "tasks", partial: "tasks/task", locals: { task: self } # outra parte aqui
+  end
+```
+
+Então duas mudanças ocorrerão na view:
+
+app/views/tasks/index.html.erb
+
+```html
+  <div id="tasks" class="min-w-full">
+    <%= turbo_stream_from :tasks %>
+    <%= render @tasks %>
+  </div>
+```
+
+No início do arquivo app/views/tasks/_task.html.erb
+
+```html
+<%= turbo_stream_from task %>
+```
+
+No controller app/controllers/projects_controller.rb vamos alterar o método `index`
+
+```ruby
+@tasks = Task.order(created_at: :desc)
+```
+
+### 9. Segurança
 
 Aumentaremos a segurança da aplicação permitindo acesso externo somente a determinadas origens e ocultando parâmetros sensíveis.
 
@@ -449,7 +535,30 @@ Rails.application.config.filter_parameters += [
 
 Reinicie o servidor e o guard, rode novamente.
 
-### 9. Expondo o Projeto com NGrok
+### 10. Colocando a navegação entre telas
+
+Como um extra, o código para navegar entre as telas será acrescentado.
+Basta acrescentar acima de de `main` no arquivo app/views/layouts/application.html.erb
+
+```html
+<nav class="bg-gray-800 p-4 text-white fixed w-full top-0">
+  <div class="container mx-auto flex justify-between items-center">
+    <%= link_to root_path, class: "text-lg font-bold" do %>
+      Home
+    <% end %>
+    <div class="flex space-x-4">
+      <%= link_to tasks_path, class: "flex items-center space-x-2" do %>
+        Tasks
+      <% end %>
+      <%= link_to projects_path, class: "flex items-center space-x-2" do %>
+        Projects
+      <% end %>
+    </div>
+  </div>
+</nav>
+```
+
+### 11. Expondo o Projeto com NGrok
 
 Utilizaremos o NGrok para expor o projeto localmente, permitindo acesso externo aos endpoints da aplicação.
 
