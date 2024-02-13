@@ -12,6 +12,21 @@
   </head>
 
   <body>
+    <nav class="bg-gray-800 p-4 text-white fixed w-full top-0">
+      <div class="container mx-auto flex justify-between items-center">
+        <%= link_to root_path, class: "text-lg font-bold" do %>
+          Home
+        <% end %>
+        <div class="flex space-x-4">
+          <%= link_to tasks_path, class: "flex items-center space-x-2" do %>
+            Tasks
+          <% end %>
+          <%= link_to projects_path, class: "flex items-center space-x-2" do %>
+            Projects
+          <% end %>
+        </div>
+      </div>
+    </nav>
     <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>
     </main>
