@@ -171,28 +171,6 @@ rails g scaffold project title completed_at:datetime
 rails g scaffold task title scheduled_at:datetime completed_at:datetime
 ```
 
-Os models serão criados e também as factories, mas de uma maneira um pouco ruim, vamos melhorar.
-
-Edite spec/factories/projects.rb para projects.
-
-```ruby
-FactoryBot.define do
-  factory :project do
-    title { Faker::Lorem.sentence }
-  end
-end
-```
-
-E para tasks spec/factories/tasks.rb
-
-```ruby
-FactoryBot.define do
-  factory :task do
-    title { Faker::Lorem.sentence }
-  end
-end
-```
-
 Alem disso coloque no arquivo db/seeds.rb o codigo abaixo:
 
 ```ruby
@@ -210,7 +188,7 @@ rails db:drop db:create db:migrate db:seed
 
 Com Guard rodando, aperte `Enter` e já será possível ver a cobertura de testes no arquivo coverage/index.html
 
-### 6. Desenvolvimento de Rotas API
+### 6. Desenvolvimento  API
 
 Configuraremos as rotas da API para manipulação dos recursos de tasks e projects, permitindo obter a lista de dados e marcar como completo.
 
@@ -252,6 +230,36 @@ rm -rf spec/views
 rm -rf spec/helpers
 ```
 
+**Entendendo factories**
+
+As factories são funções que geram instâncias de objetos fictícios para uso em testes automatizados. Elas simplificam a criação de dados de teste
+
+Para cada model que corresponde a uma tabela no banco é criada uma factory automaticamente. Utilizando fakers juntamente de factories é possível ter dados fictícios sem precisar se preocupar com termos.
+
+Para projects editamos spec/factories/projects.rb para projects.
+
+```ruby
+FactoryBot.define do
+  factory :project do
+    title { Faker::Lorem.sentence }
+  end
+end
+```
+
+E para tasks spec/factories/tasks.rb
+
+```ruby
+FactoryBot.define do
+  factory :task do
+    title { Faker::Lorem.sentence }
+  end
+end
+```
+
+**Testes de models**
+
+Para cada model que corresponde a uma tabela no banco teremos seus testes para garantir que eles operam corretamente.
+
 Iniciando com projects
 
 app/models/project.rb
@@ -266,19 +274,6 @@ spec/models/project_spec.rb
   describe "validations" do
     it { should validate_presence_of(:title) }
   end
-```
-
-e spec/requests/projects_spec.rb
-
-```ruby
-  let(:valid_attributes) {
-    attributes_for(:project)
-  }
-
-  let(:invalid_attributes) {
-    {title: ''}
-  }
-  # E o restante do arquivo
 ```
 
 Agora com tasks
@@ -297,7 +292,24 @@ spec/models/task_spec.rb
   end
 ```
 
-e spec/requests/tasks_spec.rb
+**Testes de requests**
+
+São gerados pelo scaffold, mas precisam ser ajustados para um resultado válido.
+
+Para projects  spec/requests/projects_spec.rb
+
+```ruby
+  let(:valid_attributes) {
+    attributes_for(:project)
+  }
+
+  let(:invalid_attributes) {
+    {title: ''}
+  }
+  # E o restante do arquivo
+```
+
+e tasks spec/requests/tasks_spec.rb
 
 ```ruby
   let(:valid_attributes) {
