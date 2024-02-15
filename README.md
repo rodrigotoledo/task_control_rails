@@ -332,7 +332,7 @@ require 'rails_helper'
 RSpec.describe 'Api::Projects', type: :request do
   describe 'Projects Operations' do
 
-    describe 'GET /projects' do
+    describe 'GET /api/projects' do
       it 'returns a list of projects in ascending order of creation' do
         create_list(:project, 5)
 
@@ -344,7 +344,7 @@ RSpec.describe 'Api::Projects', type: :request do
       end
     end
 
-    describe 'PATCH /projects/:id' do
+    describe 'PATCH /api/projects/:id' do
       it 'marks a project as completed' do
         project = create(:project)
 
@@ -366,7 +366,7 @@ require 'rails_helper'
 
 RSpec.describe "Api::Tasks", type: :request do
   describe 'Tasks Operations' do
-    describe 'GET /tasks' do
+    describe 'GET /api/tasks' do
       it 'returns a list of tasks in ascending order of creation' do
         create_list(:task, 5)
         get api_tasks_path
@@ -377,7 +377,7 @@ RSpec.describe "Api::Tasks", type: :request do
       end
     end
 
-    describe 'PATCH /tasks/:id' do
+    describe 'PATCH /api/tasks/:id' do
       it 'marks a task as completed' do
         task = create(:task)
 
@@ -448,13 +448,13 @@ app/models/project.rb
   private
 
   def broadcast_create
-    broadcast_prepend_to self, target: "projects", partial: "projects/project", locals: { project: self } # outra parte aqui
+    broadcast_append_to self, target: "projects", partial: "projects/project", locals: { project: self } # outra parte aqui
   end
 ```
 
 As ações de criar, atualizar e excluir são ouvidas ao adicionar `broadcasts_refreshes`. A única diferença que temos é que ao criar precisamos inserir realmente em um determinado ponto de html no sistema.
 
-Então `broadcast_prepend_to self, target: "projects", partial: "projects/project", locals: { project: self }` está informando para fazer `prepend` ou seja inserir ao topo de um `target`, ou seja o identificador de broadcasting no sistema. Logo em seguida qual conteúdo será adicionado, justamente uma partial com o próprio objeto.
+Então `broadcast_append_to self, target: "projects", partial: "projects/project", locals: { project: self }` está informando para fazer `append` ou seja inserir ao início de um `target`, ou seja o identificador de broadcasting no sistema. Logo em seguida qual conteúdo será adicionado, justamente uma partial com o próprio objeto.
 
 Então duas mudanças ocorrerão na view:
 
@@ -480,10 +480,10 @@ Isto garante que código no model `broadcasts_refreshes` em qualquer alteração
 E para que o que for criado seja refletido no início da lista no controller app/controllers/projects_controller.rb vamos alterar o método `index`
 
 ```ruby
-@projects = Project.order(created_at: :desc)
+@projects = Project.order(updated_at: :desc)
 ```
 
-app/models/task.rb
+Para o model app/models/task.rb
 
 ```ruby
   broadcasts_refreshes # parte da magica acontece aqui
@@ -491,7 +491,7 @@ app/models/task.rb
   private
 
   def broadcast_create
-    broadcast_prepend_to self, target: "tasks", partial: "tasks/task", locals: { task: self } # outra parte aqui
+    broadcast_append_to self, target: "tasks", partial: "tasks/task", locals: { task: self } # outra parte aqui
   end
 ```
 
@@ -515,39 +515,10 @@ No início do arquivo app/views/tasks/_task.html.erb
 No controller app/controllers/projects_controller.rb vamos alterar o método `index`
 
 ```ruby
-@tasks = Task.order(created_at: :desc)
+@tasks = Task.order(updated_at: :desc)
 ```
 
-### 9. Segurança
-
-Aumentaremos a segurança da aplicação permitindo acesso externo somente a determinadas origens e ocultando parâmetros sensíveis.
-
-Inicialmente iremos dar permissão a acesso externo. No arquivo config/initializers/cors.rb para:
-
-```ruby
-Rails.application.config.middleware.insert_before 0, Rack::Cors do
-  allow do
-    origins '*' # Permitir solicitações de todas as origens (ajuste conforme necessário)
-    resource '*',
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head],
-      expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
-      max_age: 0
-  end
-end
-```
-
-E config/initializers/filter_parameter_logging.rb
-
-```ruby
-Rails.application.config.filter_parameters += [
-  :passw, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :ssn
-]
-```
-
-Reinicie o servidor e o guard, rode novamente.
-
-### 10. Colocando a navegação entre telas
+### 9. Colocando a navegação entre telas
 
 Como um extra, o código para navegar entre as telas será acrescentado.
 Primeiro acrescentamos a biblioteca de ícones font-awesome no cabeçalho do layout e depois a navegação.
@@ -579,7 +550,7 @@ E para navegação acrescentar acima de de `<main></main>`
 </nav>
 ```
 
-### 11. Expondo o Projeto com NGrok
+### 10. Expondo o Projeto com NGrok
 
 Utilizaremos o NGrok para expor o projeto localmente, permitindo acesso externo aos endpoints da aplicação.
 
@@ -588,6 +559,35 @@ Primeiramente entre em `https://ngrok.com/` se possivel faca o cadastro, baixe e
 ```bash
 ngrok http 3000
 ```
+
+### 11. Segurança
+
+Aumentaremos a segurança da aplicação permitindo acesso externo somente a determinadas origens e ocultando parâmetros sensíveis.
+
+Inicialmente iremos dar permissão a acesso externo. No arquivo config/initializers/cors.rb para:
+
+```ruby
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins '*' # Permitir solicitações de todas as origens (ajuste conforme necessário)
+    resource '*',
+      headers: :any,
+      methods: [:get, :post, :put, :patch, :delete, :options, :head],
+      expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+      max_age: 0
+  end
+end
+```
+
+E config/initializers/filter_parameter_logging.rb
+
+```ruby
+Rails.application.config.filter_parameters += [
+  :passw, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :ssn
+]
+```
+
+Reinicie o servidor e o guard, rode novamente.
 
 ## Pré-requisitos
 
