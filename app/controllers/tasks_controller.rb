@@ -1,12 +1,23 @@
+# == Schema Information
+#
+# Table name: tasks
+#
+#  id           :bigint           not null, primary key
+#  completed_at :datetime
+#  scheduled_at :datetime
+#  title        :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
 class TasksController < ApplicationController
   before_action :set_task, only: %i[show edit update destroy]
 
-  # GET /tasks or /tasks.json
+  # GET /tasks
   def index
-    @tasks = Task.order(updated_at: :desc)
+    @tasks = Task.includes(:feature_image_attachment).order(updated_at: :desc)
   end
 
-  # GET /tasks/1 or /tasks/1.json
+  # GET /tasks/1
   def show; end
 
   # GET /tasks/new
@@ -17,42 +28,30 @@ class TasksController < ApplicationController
   # GET /tasks/1/edit
   def edit; end
 
-  # POST /tasks or /tasks.json
+  # POST /tasks
   def create
     @task = Task.new(task_params)
 
-    respond_to do |format|
-      if @task.save
-        format.html { redirect_to task_url(@task), notice: 'Task was successfully created.' }
-        format.json { render :show, status: :created, location: @task }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
-      end
+    if @task.save
+      redirect_to task_url(@task), notice: 'Task was successfully created.'
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /tasks/1 or /tasks/1.json
+  # PATCH/PUT /tasks/1
   def update
-    respond_to do |format|
-      if @task.update(task_params)
-        format.html { redirect_to task_url(@task), notice: 'Task was successfully updated.' }
-        format.json { render :show, status: :ok, location: @task }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
-      end
+    if @task.update(task_params)
+      redirect_to task_url(@task), notice: 'Task was successfully updated.'
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /tasks/1 or /tasks/1.json
+  # DELETE /tasks/1
   def destroy
     @task.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to tasks_url, notice: 'Task was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to tasks_url, notice: 'Task was successfully destroyed.'
   end
 
   private
@@ -64,6 +63,6 @@ class TasksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def task_params
-    params.require(:task).permit(:title, :scheduled_at, :completed_at)
+    params.require(:task).permit(:title, :scheduled_at, :completed_at, :feature_image)
   end
 end
