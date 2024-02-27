@@ -17,6 +17,11 @@
   </div>
 
   <div class="my-5">
+    <%= form.label :feature_image %>
+    <%= form.file_field :feature_image, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="my-5">
     <%= form.label :completed_at %>
     <%= form.datetime_field :completed_at, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
