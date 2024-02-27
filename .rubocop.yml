@@ -1,0 +1,8 @@
+require: rubocop-rails
+Metrics/BlockLength:
+  Enabled: false
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'test/**/*.rb'
+    - 'spec/**/*.rb'

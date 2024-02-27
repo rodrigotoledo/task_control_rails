@@ -8,7 +8,9 @@
 /.bundle
 
 # Ignore all environment files (except templates).
-/.env*
+/.env
+/.env.development
+/.env.test
 !/.env*.erb
 
 # Ignore all logfiles and tempfiles.
@@ -37,3 +39,5 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 coverage
+settings.json
+config/database.yml
