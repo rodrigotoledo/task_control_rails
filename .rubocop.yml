@@ -1,5 +1,6 @@
 require: rubocop-rails
 Metrics/BlockLength:
+  Max: 200
   Enabled: false
   Exclude:
     - 'Rakefile'
