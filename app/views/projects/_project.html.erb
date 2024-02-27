@@ -6,6 +6,15 @@
   </p>
 
   <p class="my-5">
+    <% if project.feature_image.attached? %>
+      <%= image_tag project.feature_image.variant(resize_to_limit: [100, 100]) %>
+    <% else %>
+      <p>No image available</p>
+    <% end %>
+  </p>
+
+
+  <p class="my-5">
     <strong class="block font-medium mb-1">Completed at:</strong>
     <%= project.completed_at %>
   </p>
