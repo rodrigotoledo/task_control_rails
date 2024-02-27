@@ -2,20 +2,20 @@
 
 Neste curso, vamos aprender a desenvolver uma aplicação web utilizando o framework Ruby on Rails, denominada Tasks Control. Ao longo deste curso, abordaremos desde a instalação das tecnologias necessárias até a exposição do projeto para acesso externo utilizando o NGrok.
 
-## Tecnologias Utilizadas:
+## Tecnologias Utilizadas
 
 - **Ruby on Rails**: Framework web MVC para desenvolvimento rápido de aplicações web em Ruby.
 - **Banco de Dados SQL_LITE**: Banco de dados leve e de fácil integração com o Rails para armazenamento dos dados da aplicação.
 - **NGrok**: Ferramenta para criação de túneis que permite expor projetos locais para acesso externo.
 
-## Diferenciais do Curso:
+## Diferenciais do Curso
 
 - Instalação e utilização do RVM para controle de versões do Ruby e gerenciamento de ambientes.
 - Implementação de manipulação de dados por meio de navegador e API, refletindo alterações em tempo real.
 - Cobertura completa de testes utilizando RSpec para garantir a qualidade do código.
 - Utilização do NGrok para expor o projeto para acesso externo, facilitando o desenvolvimento e integração com outras aplicações.
 
-## Conteúdo do Curso:
+## Conteúdo do Curso
 
 ### 1. Instalando o RVM
 
@@ -53,17 +53,45 @@ Configuraremos as bibliotecas necessárias para o desenvolvimento da aplicação
 # Gemfile
 
 group :development, :test do
-  gem 'rspec-rails'
-  gem "faker", "~> 3.2"
-  gem "factory_bot_rails"
+  # Ferramenta para debugar
+  gem 'byebug', '~> 11.1'
+  # Carrega variáveis de ambiente a partir de um arquivo .env
+  gem 'dotenv-rails'
+  # Facilita a criação de mocks de objetos em testes
+  gem 'factory_bot_rails'
+  # Gera dados falsos para testes
+  gem 'faker', '~> 3.2'
+  # Guarda e executa automaticamente os testes
   gem 'guard-rspec', '~> 4.7'
-  gem "byebug", "~> 11.1"
-  gem 'simplecov'
+  # Framework de testes RSpec
+  gem 'rspec-rails'
+  # Adiciona suporte para testes com shoulda-matchers
   gem 'shoulda-matchers', require: false
+  # Analisa a cobertura de código dos testes
+  gem 'simplecov'
 end
-gem 'tailwindcss-rails'
 
-gem "rack-cors", "~> 2.0"
+group :development do
+  # Anota os modelos com informações do schema do banco de dados
+  gem 'annotate'
+  # Ferramenta de segurança para Rails
+  gem 'brakeman'
+  # Ajuda a detectar queries N+1 em ActiveRecord
+  gem 'bullet'
+end
+
+# Processamento de imagens
+gem 'image_processing', '~> 1.2'
+# Configuração de CORS para Rack
+gem 'rack-cors', '~> 2.0'
+# Banco de dados chave-valor em memória
+gem 'redis', '>= 4.0.1'
+# Ferramenta de análise estática de código Ruby
+gem 'rubocop', require: false
+# Extensão do RuboCop para Rails
+gem 'rubocop-rails', require: false
+# Framework CSS Tailwind CSS para Rails
+gem 'tailwindcss-rails'
 ```
 
 Parando o servidor, rode então:
@@ -71,6 +99,17 @@ Parando o servidor, rode então:
 ```bash
 bundle install
 ```
+
+Configurando o banco de dados PostgreSQL. Precisamospegar o arquivo .env.example e duplicar para .env.development, .env.test e .env
+
+No arquivo .env.example as constantes ficam em branco
+
+```env
+PRODUCTION_DATABASE_URL=
+JWT_KEY=
+```
+
+Mas nos demais preencha corretamente com as informações necessárias
 
 Vamos deixar que o visual de nosso projeto passe a seguir o framework TailwindCSS, então rode:
 
@@ -171,6 +210,12 @@ rails g scaffold project title completed_at:datetime
 rails g scaffold task title scheduled_at:datetime completed_at:datetime
 ```
 
+Não usamos jbuilders então podemos remover os arquivos json da seguinte maneira
+
+```bash
+find app/views -type f -name "*.jbuilder" -exec rm {} \;
+```
+
 Alem disso coloque no arquivo db/seeds.rb o codigo abaixo:
 
 ```ruby
@@ -230,7 +275,7 @@ rm -rf spec/views
 rm -rf spec/helpers
 ```
 
-**Entendendo factories**
+**Entendendo factories**:
 
 As factories são funções que geram instâncias de objetos fictícios para uso em testes automatizados. Elas simplificam a criação de dados de teste
 
@@ -256,7 +301,7 @@ FactoryBot.define do
 end
 ```
 
-**Testes de models**
+**Testes de models**:
 
 Para cada model que corresponde a uma tabela no banco teremos seus testes para garantir que eles operam corretamente.
 
@@ -292,7 +337,7 @@ spec/models/task_spec.rb
   end
 ```
 
-**Testes de requests**
+**Testes de requests**:
 
 São gerados pelo scaffold, mas precisam ser ajustados para um resultado válido.
 
@@ -567,14 +612,22 @@ Aumentaremos a segurança da aplicação permitindo acesso externo somente a det
 Inicialmente iremos dar permissão a acesso externo. No arquivo config/initializers/cors.rb para:
 
 ```ruby
+# Configuração global para lidar com CORS (Cross-Origin Resource Sharing)
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  # Permite solicitações de qualquer origem
   allow do
-    origins '*' # Permitir solicitações de todas as origens (ajuste conforme necessário)
+    # Origens permitidas
+    origins '*'
+    # Recurso permitido
     resource '*',
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head],
-      expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
-      max_age: 0
+             # Permite todos os cabeçalhos
+             headers: :any,
+             # Métodos HTTP permitidos
+             methods: %i[get post put patch delete options head],
+             # Expor os seguintes cabeçalhos nas respostas
+             expose: %w[access-token expiry token-type uid client],
+             # Define a idade máxima para as respostas em cache (0 para desativar o cache)
+             max_age: 0
   end
 end
 ```
@@ -589,10 +642,31 @@ Rails.application.config.filter_parameters += [
 
 Reinicie o servidor e o guard, rode novamente.
 
+## Extras
+
+Aqui vão alguns comandos úteis que estão disponíveis por conta de gems:
+
+**Irá gerar um arquivo com as possíveis falhas de segurança em seu projeto**:
+
+```bash
+brakeman -o coverage/output.html
+```
+
+**Gera comentários úteis em seus arquivos**:
+
+```bash
+annotate
+```
+
+**Eu gosto muito do editor visual studio, então algumas das extensões que utilizo**:
+
+
+
 ## Pré-requisitos
 
 - Conhecimento básico de Ruby e programação web.
 - Instalação do RVM.
 - Ter o Ruby, o Rails e o NGrok instalados na máquina a partir do RVM.
+- Docker para initiciliar os serviços que encontram na pasta docker-compose
 
 Ao final deste curso, você estará apto a desenvolver uma aplicação web, API, utilizando Ruby on Rails, implementar testes automatizados para garantir a qualidade do código e expor o projeto para acesso externo utilizando o NGrok.
