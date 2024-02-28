@@ -1,43 +1,63 @@
-# Curso: Desenvolvimento de Aplicações com Ruby on Rails - Tasks Control
+# Course: Application Development with Ruby on Rails - Tasks Control
 
-Neste curso, vamos aprender a desenvolver uma aplicação web utilizando o framework Ruby on Rails, denominada Tasks Control. Ao longo deste curso, abordaremos desde a instalação das tecnologias necessárias até a exposição do projeto para acesso externo utilizando o NGrok.
+In this course, we will learn how to develop a web application using the Ruby on Rails framework, called Tasks Control. Throughout this course, we will cover everything from installing the necessary technologies to exposing the project for external access using NGrok.
 
-## Tecnologias Utilizadas
+## Technologies Used
 
-- **Ruby on Rails**: Framework web MVC para desenvolvimento rápido de aplicações web em Ruby.
-- **Banco de Dados SQL_LITE**: Banco de dados leve e de fácil integração com o Rails para armazenamento dos dados da aplicação.
-- **NGrok**: Ferramenta para criação de túneis que permite expor projetos locais para acesso externo.
+- **Ruby on Rails**: MVC web framework for rapid development of web applications in Ruby.
+- **Docker**: The need for Docker in the Rails project is to ensure consistent development and deployment environments across different systems.
+- **NGrok**: Tool for creating tunnels that allows you to expose local projects for external access.
 
-## Diferenciais do Curso
+## Course Differences
 
-- Instalação e utilização do RVM para controle de versões do Ruby e gerenciamento de ambientes.
-- Implementação de manipulação de dados por meio de navegador e API, refletindo alterações em tempo real.
-- Cobertura completa de testes utilizando RSpec para garantir a qualidade do código.
-- Utilização do NGrok para expor o projeto para acesso externo, facilitando o desenvolvimento e integração com outras aplicações.
+- Installation and use of RVM for Ruby version control and environment management.
+- Implementation of data manipulation through browser and API, reflecting changes in real time.
+- Complete test coverage using RSpec to ensure code quality.
+- Use of NGrok to expose the project for external access, facilitating development and integration with other applications.
 
-## Conteúdo do Curso
+## Course content
 
-### 1. Instalando o RVM
+### 1. Installing RVM
 
-O RVM será utilizado para gerenciar as versões do Ruby e os ambientes de desenvolvimento. Será instalado através do seguinte procedimento:
+RVM will be used to manage Ruby versions and development environments. It will be installed using the following procedure:
 
-- Acesse [https://rvm.io/](https://rvm.io/) e siga as instruções para instalação.
+- Access [https://rvm.io/](https://rvm.io/) and follow the installation instructions.
 
-### 2. Criando e Inicializando o Projeto Rails
+### 2. Creating and Initializing the Rails Project
 
-Com o RVM instalado, vamos criar e inicializar o ambiente do projeto Rails:
+First you need to create the .env file based on the .env.example file, don't worry this file it's ignored  on.gitignore file.
+
+With RVM installed, let's create and initialize the Rails project environment:
 
 ```bash
 rvm use 3.2.1@tasks_control --create
 gem install rails --no-doc
-rails new tasks_control -T
+rails new tasks_control -d postgresql -T
 ```
 
-Com isto a versão mais recente do framework Rails sera instalada no ambiente (gemset) do projeto.
+With this, the latest version of the Rails framework will be installed in the project's environment (gemset).
 
-Sera criado o projeto `tasks_control`. Dentro da pasta provavelmente nao existira um arquivo chamado .ruby-gemset, entre na pasta e caso realmente nao exista, crie ele e escreva dentro dele `tasks_control`. Com isso o projeto sabera que deve instalar bibliotecas `gems` somente dentro desse ambiente.
+The `tasks_control` project will be created. Inside the folder there will probably not be a file called .ruby-gemset, go into the folder and if it doesn't really exist, create it and write `tasks_control` inside it. With this, the project will know that it should install `gems` libraries only within this environment.
 
-Entao para iniciarmos o projeto, vamos rodar dentro da pasta:
+**Start Docker services**:
+
+After installing the Docker, you need to start the services:
+
+- redis
+- postgresql
+- mailcatcher
+
+Enter the following command in each docker compose directory **docker-compose/...**:
+
+```bash
+docker compose up -d docker-compose/mailcatcher
+docker compose up -d docker-compose/postgresql
+docker compose up -d docker-compose/redis
+```
+
+Feel free to update with your data.
+
+So to start the project, let's run it inside the folder:
 
 ```bash
 bundle install
@@ -45,82 +65,72 @@ rails db:drop db:create db:migrate
 rails s
 ```
 
-### 3. Configurando Bibliotecas para Desenvolvimento
+### 3. Configuring Libraries for Development
 
-Configuraremos as bibliotecas necessárias para o desenvolvimento da aplicação, como RSpec, Faker, FactoryBot, Guard e outras. Abaixo, esta o conteudo que sera acrescentado ao arquivo Gemfile
+We will configure the libraries necessary for application development, such as RSpec, Faker, FactoryBot, Guard and others. Below is the content that will be added to the Gemfile
 
 ```ruby
 # Gemfile
+# Remove gem 'juilder'
 
 group :development, :test do
-  # Ferramenta para debugar
+  # Debug tool
   gem 'byebug', '~> 11.1'
-  # Carrega variáveis de ambiente a partir de um arquivo .env
+  # Load environment variables from a .env file
   gem 'dotenv-rails'
-  # Facilita a criação de mocks de objetos em testes
+  # Facilitates the creation of object mocks in tests
   gem 'factory_bot_rails'
-  # Gera dados falsos para testes
+  # Generates false data for testing
   gem 'faker', '~> 3.2'
-  # Guarda e executa automaticamente os testes
+  # Automatically save and run tests
   gem 'guard-rspec', '~> 4.7'
-  # Framework de testes RSpec
+  # RSpec testing framework
   gem 'rspec-rails'
-  # Adiciona suporte para testes com shoulda-matchers
+  # Add support for testing with shoulda-matchers
   gem 'shoulda-matchers', require: false
-  # Analisa a cobertura de código dos testes
+  # Analyze code coverage of tests
   gem 'simplecov'
 end
 
 group :development do
-  # Anota os modelos com informações do schema do banco de dados
+  # Annotate models with database schema information
   gem 'annotate'
-  # Ferramenta de segurança para Rails
+  # Security tool for Rails
   gem 'brakeman'
-  # Ajuda a detectar queries N+1 em ActiveRecord
+  # Helps detect N+1 queries in ActiveRecord
   gem 'bullet'
 end
 
-# Processamento de imagens
+# Image processing
 gem 'image_processing', '~> 1.2'
-# Configuração de CORS para Rack
+# CORS configuration for Rack
 gem 'rack-cors', '~> 2.0'
-# Banco de dados chave-valor em memória
+# In-memory key-value database
 gem 'redis', '>= 4.0.1'
-# Ferramenta de análise estática de código Ruby
+# Ruby static code analysis tool
 gem 'rubocop', require: false
-# Extensão do RuboCop para Rails
+# RuboCop extension for Rails
 gem 'rubocop-rails', require: false
-# Framework CSS Tailwind CSS para Rails
+# Tailwind CSS Framework for Rails
 gem 'tailwindcss-rails'
 ```
 
-Parando o servidor, rode então:
+Stopping the server, then run:
 
 ```bash
 bundle install
 ```
 
-Configurando o banco de dados PostgreSQL. Precisamospegar o arquivo .env.example e duplicar para .env.development, .env.test e .env
-
-No arquivo .env.example as constantes ficam em branco
-
-```env
-PRODUCTION_DATABASE_URL=
-JWT_KEY=
-```
-
-Mas nos demais preencha corretamente com as informações necessárias
-
-Vamos deixar que o visual de nosso projeto passe a seguir o framework TailwindCSS, então rode:
+Let's let the look of our project follow the TailwindCSS framework, so run:
 
 ```bash
 rails tailwindcss:install
 gem install foreman
 ```
 
-A partir deste momento não iniciaremos o projeto com o comando `rails s` mas sim com `bin/dev`.
+From this moment on, we will not start the project with the `rails s` command but rather with `bin/dev`.
 
-Entao agora vamos configurar os testes, pare o servidor rails e rode os comandos:
+So now let's configure the tests, stop the rails server and run the commands:
 
 ```bash
 bundle install
@@ -128,25 +138,25 @@ rails generate rspec:install
 bundle exec guard init rspec
 ```
 
-Abra o arquivo spec/rails_helper.rb e procure pela linha comentada abaixo pois a ideia eh deixar o diretorio `spec/support` para receber arquivos de ajuda nos testes:
+Open the spec/rails_helper.rb file and look for the line commented below as the idea is to leave the `spec/support` directory to receive help files for testing:
 
 ```ruby
 # Rails.root.glob('spec/support/**/*.rb').sort.each { |f| require f }
 ```
 
-Remova o comentario deixando:
+Remove the comment leaving:
 
 ```ruby
 Rails.root.glob('spec/support/**/*.rb').sort.each { |f| require f }
 ```
 
-Verifique se o diretorio `spec/support` existe, mas caso nao exista crie. Dentro deste diretorio crie um arquivo chamado helpers.rb e coloque o conteudo abaixo que ira permitir que as factories criadas no diretorio `spec/factories` sejam executadas nos testes e o resultado da cobertura de testes feita por `simple_cov` filtrando pastas e arquivos desnecessarios
+Check if the `spec/support` directory exists, but if not, create it. Within this directory, create a file called helpers.rb and place the content below that will allow the factories created in the `spec/factories` directory to be executed in tests and the result of the test coverage made by `simple_cov`, filtering unnecessary folders and files
 
 ```ruby
 require 'factory_bot_rails'
 require 'simplecov'
 require 'shoulda/matchers'
-RSpec.configure do |config|
+RSpec.configure from |config|
   config.include FactoryBot::Syntax::Methods
 end
 SimpleCov.start 'rails' do
@@ -158,93 +168,121 @@ SimpleCov.start 'rails' do
   add_filter 'app/mailers/application_mailer.rb'
 end
 Shoulda::Matchers.configure do |config|
-  config.integrate do |with|
+  |with| config.integrate
     with.test_framework :rspec
     with.library :rails
   end
 end
 ```
 
-### 4. Iniciando o ambiente de Desenvolvimento com Testes
+### 4. Starting the Development environment with Tests
 
-Configuraremos o ambiente de desenvolvimento para rodar testes automatizados utilizando o Guard e o RSpec. Também será realizada a cobertura de testes para garantir a qualidade do código.
+We will configure the development environment to run automated tests using Guard and RSpec. Test coverage will also be carried out to ensure code quality.
 
-Como iremos rodar testes, a aplicacao precisa aceitar requisicoes em ambiente de `development` vindos de qualquer host. Isto ocorre devido a gem `rack-cors`. Entao no arquivo config/environments/development.rb insira antes do fechamento `end` o conteudo
+As we will be running tests, the application needs to accept requests in a development environment from any host. This is due to the `rack-cors` gem. Then in the file config/environments/development.rb insert the content before closing `end`
 
 ```ruby
 config.hosts.clear
 ```
 
-Voce deve ter notado que estamos usando o Guard para desenvolvimento TDD, entao edite o arquivo `Guardfile` e procure pela linha:
+You may have noticed that we are using Guard for TDD development, so edit the `Guardfile` file and look for the line:
 
 ```rb
 rspec.spec.call("controllers/#{m[1]}_controller"),
 ```
 
-E adicione abaixo
+And add below
 
 ```rb
 rspec.spec.call("requests/#{m[1]}"),
 ```
 
-Com isso testes requests serao executados tambem. Agora execute:
+With this, test requests will also be executed. Now run:
 
 ```bash
 bundle exec guard
 ```
 
-E pressione `Enter`, os testes serao rodados e a pasta `coverage` sera criada na raiz do projeto. Inclusive ja adicione a mesma no arquivo .gitignore
+And press `Enter`, the tests will be run and the `coverage` folder will be created in the root of the project. Even add it to the .gitignore file
 
-Cada alteracao feita em qualquer parte do projeto ira rodar os testes.
+Every change made to any part of the project will run the tests.
 
-A cobertura por testes tera aumentado se rodar o `rspec` novamente, basta abrir o arquivo coverage/index.html para ver o resultado.
+Test coverage will have increased if you run `rspec` again, just open the coverage/index.html file to see the result.
 
-Agora realmente eh hora de entender o que eh util em testes e como codificar com testes.
+Now it's really time to understand what is useful in testing and how to code with tests.
 
-### 5. Criando Estrutura CRUD
+### 5. Creating CRUD Structure
 
-CRUD significa Create Update Read Update e Delete, em outras palavras as operações necessárias que podem ocorrer sobre um objeto, tabela no banco e tudo mais. Criaremos os modelos e seus cruds necessários para a aplicação, como Project e Task, juntamente com suas respectivas factories para geração de dados fictícios.
+CRUD stands for Create Update Read Update and Delete, in other words the necessary operations that can occur on an object, table in the database and everything else. We will create the models and their cruds necessary for the application, such as Project and Task, along with their respective factories for generating fictitious data.
+
+It's important to install the annotate feature, which will automatically generate documentation for models and their cruds:
+
+```bash
+rails g annotate:install
+```
+
+And now generate the scaffold files:
 
 ```bash
 rails g scaffold project title completed_at:datetime
 rails g scaffold task title scheduled_at:datetime completed_at:datetime
 ```
 
-Não usamos jbuilders então podemos remover os arquivos json da seguinte maneira
+**Ordered by updated_at**:
+
+The idea is that the user have the ability to see last updated information, change the controllers order in `index` method:
+
+For the projects app/controllers/projects_controller.rb
+
+```ruby
+  def index
+    @projects = Project.order(updated_at: :desc)
+  end
+```
+
+And for the tasks app/controllers/tasks_controller.rb
+
+```ruby
+  def index
+    @tasks = Task.order(updated_at: :desc)
+  end
+```
+
+We don't use jbuilders so we can remove the json files as follows
 
 ```bash
 find app/views -type f -name "*.jbuilder" -exec rm {} \;
 ```
 
-Alem disso coloque no arquivo db/seeds.rb o codigo abaixo:
+Furthermore, place the code below in the db/seeds.rb file:
 
 ```ruby
-30.times do |i|
+30.times of |i|
   Task.create!(title: Faker::Lorem.question, scheduled_at: (Time.now+ 1.days))
   Project.create!(title: Faker::Job.title)
 end
 ```
 
-Entao criaremos as tabelas no banco e colocaremos dados fictiícios:
+Then we will create the tables in the database and place fictitious data:
 
 ```bash
 rails db:drop db:create db:migrate db:seed
 ```
 
-Com Guard rodando, aperte `Enter` e já será possível ver a cobertura de testes no arquivo coverage/index.html
+With Guard running, press `Enter` and you will now be able to see the test coverage in the coverage/index.html file
 
-### 6. Desenvolvimento  API
+### 6. API Development
 
-Configuraremos as rotas da API para manipulação dos recursos de tasks e projects, permitindo obter a lista de dados e marcar como completo.
+We will configure the API routes for handling task and project resources, allowing us to obtain the list of data and mark it as complete.
 
-Criando os controllers da seguinte maneira:
+Creating the controllers as follows:
 
 ```bash
 rails g controller api/tasks
 rails g controller api/projects
 ```
 
-Entao abra o arquivo config/routes.rb e adicione
+Then open the config/routes.rb file and add
 
 ```ruby
 namespace :api do
@@ -253,21 +291,21 @@ namespace :api do
 end
 ```
 
-Note que serao criados arquivos tambem de testes de controllers por requests (requisicoes). Portanto na pasta `spec/requests` é que iremos concentrar os testes de requisição tanto da aplicação rails quanto da `API`.
+Note that controller test files will also be created by requests. Therefore, in the `spec/requests` folder we will concentrate the request tests for both the rails application and the `API`.
 
-### 7. Desenvolvimento dos Testes
+### 7. Test Development
 
-Vamos inciar o Guard para que tudo a partir de agora seja testado e garantirmos o desenvolvimento orientado a `TDD`
+Let's start Guard so that everything from now on is tested and we can guarantee `TDD`-oriented development
 
 ```bash
 bundle exec guard
 ```
 
-E abra um novo terminal
+And open a new terminal
 
-### Revisando os Testes gerados pelo scaffold
+### Reviewing the Tests generated by the scaffold
 
-O scaffold de cada Model já gera testes de várias maneiras, mas vamos utilizar apenas algumas que já garantem o controle de qualidade, portanto algumas pastas podem ser removidas.
+The scaffold for each Model already generates tests in several ways, but we will only use a few that already guarantee quality control, so some folders can be removed.
 
 ```bash
 rm -rf spec/routing
@@ -275,37 +313,37 @@ rm -rf spec/views
 rm -rf spec/helpers
 ```
 
-**Entendendo factories**:
+**Understanding factories**:
 
-As factories são funções que geram instâncias de objetos fictícios para uso em testes automatizados. Elas simplificam a criação de dados de teste
+Factories are functions that generate instances of dummy objects for use in automated tests. They simplify the creation of test data
 
-Para cada model que corresponde a uma tabela no banco é criada uma factory automaticamente. Utilizando fakers juntamente de factories é possível ter dados fictícios sem precisar se preocupar com termos.
+For each model that corresponds to a table in the database, a factory is automatically created. Using fakers together with factories it is possible to have fictitious data without having to worry about terms.
 
-Para projects editamos spec/factories/projects.rb para projects.
+For projects we edit spec/factories/projects.rb for projects.
 
 ```ruby
-FactoryBot.define do
+FactoryBot.define
   factory :project do
     title { Faker::Lorem.sentence }
   end
 end
 ```
 
-E para tasks spec/factories/tasks.rb
+And for tasks spec/factories/tasks.rb
 
 ```ruby
-FactoryBot.define do
+FactoryBot.define
   factory :task do
     title { Faker::Lorem.sentence }
   end
 end
 ```
 
-**Testes de models**:
+**Model tests**:
 
-Para cada model que corresponde a uma tabela no banco teremos seus testes para garantir que eles operam corretamente.
+For each model that corresponds to a table in the database, we will have tests to ensure that they operate correctly.
 
-Iniciando com projects
+Starting with projects
 
 app/models/project.rb
 
@@ -321,7 +359,7 @@ spec/models/project_spec.rb
   end
 ```
 
-Agora com tasks
+Now with tasks
 
 app/models/task.rb
 
@@ -337,11 +375,11 @@ spec/models/task_spec.rb
   end
 ```
 
-**Testes de requests**:
+**Request tests**:
 
-São gerados pelo scaffold, mas precisam ser ajustados para um resultado válido.
+They are generated by the scaffold, but need to be adjusted for a valid result.
 
-Para projects  spec/requests/projects_spec.rb
+For projects spec/requests/projects_spec.rb
 
 ```ruby
   let(:valid_attributes) {
@@ -351,10 +389,10 @@ Para projects  spec/requests/projects_spec.rb
   let(:invalid_attributes) {
     {title: ''}
   }
-  # E o restante do arquivo
+  # And the rest of the file
 ```
 
-e tasks spec/requests/tasks_spec.rb
+and tasks spec/requests/tasks_spec.rb
 
 ```ruby
   let(:valid_attributes) {
@@ -364,12 +402,12 @@ e tasks spec/requests/tasks_spec.rb
   let(:invalid_attributes) {
     {title: ''}
   }
-  # e o restante do arquivo
+  # and the rest of the file
 ```
 
-O testes de `API` requerem um pouco mais de atenção então vamos passo uma a um.
+`API` testing requires a little more attention so let's go step by one.
 
-Iniciando com spec/requests/api/projects_spec.rb
+Starting with spec/requests/api/projects_spec.rb
 
 ```ruby
 require 'rails_helper'
@@ -404,7 +442,7 @@ RSpec.describe 'Api::Projects', type: :request do
 end
 ```
 
-E também para spec/requests/api/tasks_spec.rb
+And also for spec/requests/api/tasks_spec.rb
 
 ```ruby
 require 'rails_helper'
@@ -437,71 +475,71 @@ RSpec.describe "Api::Tasks", type: :request do
 end
 ```
 
-Os testes estão prontos mas os arquivos do projeto não.
+The tests are ready but the project files are not.
 
 app/controllers/api/projects_controller.rb
 
 ```ruby
 class Api::ProjectsController < ActionController::API
   def index
-    projects = Project.order(created_at: :asc)
+    projects = Project.order(updated_at: :desc)
     render json: projects.all
   end
 
   def update
     project = Project.find(params[:id])
     project.update(completed_at: Time.now)
-    head :ok
+    head: ok
   end
 end
 ```
 
-e app/controllers/api/tasks_controller.rb
+and app/controllers/api/tasks_controller.rb
 
 ```ruby
 class Api::TasksController < ActionController::API
   def index
-    tasks = Task.order(scheduled_at: :asc)
+    tasks = Task.order(updated_at: :desc)
     render json: tasks.all
   end
 
   def update
     task = Task.find(params[:id])
     task.update(completed_at: Time.now)
-    head :ok
+    head: ok
   end
 end
 ```
 
-Pronto, novamente com Guard executando aperte `Enter` a aplicacão e tudo será visto como coberto e a aplicação pronta para receber acessos.
+Once again, with Guard running, press `Enter` on the application and everything will be seen as covered and the application will be ready to receive access.
 
-Basta iniciar com `bin/dev`
+Just start with `bin/dev`
 
-### 8. Broadcasting - Ações em tempo real
+### 8. Broadcasting - Real-time actions
 
-Em Rails ações em tempo real sempre foi um tema a ser discutido. Qual seria a melhor proposta e de repente core do Rails veio com a idéia e solução chamada `broadcasting`.
+In Rails, real-time actions have always been a topic to be discussed. What would be the best proposal and suddenly Rails core came up with the idea and solution called `broadcasting`.
 
-Em resumo, broadcasting em Rails é uma maneira de fornecer comunicação em tempo real entre o servidor e os clientes, utilizando tecnologias como WebSockets para enviar e receber mensagens instantaneamente.
+In short, broadcasting in Rails is a way of providing real-time communication between the server and clients, using technologies such as WebSockets to send and receive messages instantly.
 
-Começando com os models acrescentando:
+Starting with the models adding:
 
 app/models/project.rb
 
 ```ruby
-  broadcasts_refreshes # parte da magica acontece aqui
+  broadcasts_refreshes # part of the magic happens here
   after_create :broadcast_create
   private
 
   def broadcast_create
-    broadcast_append_to self, target: "projects", partial: "projects/project", locals: { project: self } # outra parte aqui
+    broadcast_append_to self, target: "projects", partial: "projects/project", locals: { project: self } # other part here
   end
 ```
 
-As ações de criar, atualizar e excluir são ouvidas ao adicionar `broadcasts_refreshes`. A única diferença que temos é que ao criar precisamos inserir realmente em um determinado ponto de html no sistema.
+Create, update and delete actions are heard when adding `broadcasts_refreshes`. The only difference we have is that when creating we need to actually insert it into a certain html point in the system.
 
-Então `broadcast_append_to self, target: "projects", partial: "projects/project", locals: { project: self }` está informando para fazer `append` ou seja inserir ao início de um `target`, ou seja o identificador de broadcasting no sistema. Logo em seguida qual conteúdo será adicionado, justamente uma partial com o próprio objeto.
+So `broadcast_append_to self, target: "projects", partial: "projects/project", locals: { project: self }` is telling you to do `append`, that is, insert at the beginning of a `target`, that is, the identifier of broadcasting in the system. Soon after, the content will be added, precisely a partial with the object itself.
 
-Então duas mudanças ocorrerão na view:
+Then two changes will occur in the view:
 
 app/views/projects/index.html.erb
 
@@ -512,35 +550,35 @@ app/views/projects/index.html.erb
   </div>
 ```
 
-O código `<%= turbo_stream_from :projects %>` servirá principalmente para acrescentar ao criar o objeto na lista.
+The code `<%= turbo_stream_from :projects %>` will mainly serve to add when creating the object in the list.
 
-No início do arquivo app/views/projects/_project.html.erb
+At the beginning of the app/views/projects/_project.html.erb file
 
 ```html
 <%= turbo_stream_from project %>
 ```
 
-Isto garante que código no model `broadcasts_refreshes` em qualquer alteração que ocorra reflita sobre este objeto, ou seja, atualizando ou excluindo. O mesmo será feito sobre task.
+This ensures that code in the `broadcasts_refreshes` model reflects any change that occurs on this object, that is, updating or deleting it. The same will be done about task.
 
-E para que o que for criado seja refletido no início da lista no controller app/controllers/projects_controller.rb vamos alterar o método `index`
+And so that what is created is reflected at the beginning of the list in the controller app/controllers/projects_controller.rb, we will change the `index` method
 
 ```ruby
 @projects = Project.order(updated_at: :desc)
 ```
 
-Para o model app/models/task.rb
+For model app/models/task.rb
 
 ```ruby
-  broadcasts_refreshes # parte da magica acontece aqui
+  broadcasts_refreshes # part of the magic happens here
   after_create :broadcast_create
   private
 
   def broadcast_create
-    broadcast_append_to self, target: "tasks", partial: "tasks/task", locals: { task: self } # outra parte aqui
+    broadcast_append_to self, target: "tasks", partial: "tasks/task", locals: { task: self } # other part here
   end
 ```
 
-Então duas mudanças ocorrerão na view:
+Then two changes will occur in the view:
 
 app/views/tasks/index.html.erb
 
@@ -551,29 +589,29 @@ app/views/tasks/index.html.erb
   </div>
 ```
 
-No início do arquivo app/views/tasks/_task.html.erb
+At the beginning of the app/views/tasks/_task.html.erb file
 
 ```html
 <%= turbo_stream_from task %>
 ```
 
-No controller app/controllers/projects_controller.rb vamos alterar o método `index`
+In the controller app/controllers/projects_controller.rb we will change the `index` method
 
 ```ruby
 @tasks = Task.order(updated_at: :desc)
 ```
 
-### 9. Colocando a navegação entre telas
+### 9. Placing navigation between screens
 
-Como um extra, o código para navegar entre as telas será acrescentado.
-Primeiro acrescentamos a biblioteca de ícones font-awesome no cabeçalho do layout e depois a navegação.
-No arquivo app/views/layouts/application.html.erb dentro entre a tag `<head></head>` adicione:
+As an extra, code to navigate between screens will be added.
+First we add the font-awesome icon library to the layout header and then the navigation.
+In the app/views/layouts/application.html.erb file inside the `<head></head>` tag add:
 
 ```html
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
 ```
 
-E para navegação acrescentar acima de de `<main></main>`
+And for navigation add above `<main></main>`
 
 ```html
 <nav class="bg-gray-800 p-4 text-white fixed w-full top-0">
@@ -595,44 +633,44 @@ E para navegação acrescentar acima de de `<main></main>`
 </nav>
 ```
 
-### 10. Expondo o Projeto com NGrok
+### 10. Exposing the Project with NGrok
 
-Utilizaremos o NGrok para expor o projeto localmente, permitindo acesso externo aos endpoints da aplicação.
+We will use NGrok to expose the project locally, allowing external access to the application's endpoints.
 
-Primeiramente entre em `https://ngrok.com/` se possivel faca o cadastro, baixe e faca a instalacao do `ngrok` na sua maquina. Apos feito isso se o projeto `Rails` estiver rodando, digite o comando em outra aba do terminal:
+First, go to `https://ngrok.com/`, if possible, register, download and install `ngrok` on your machine. After doing this, if the `Rails` project is running, type the command in another terminal tab:
 
 ```bash
 ngrok http 3000
 ```
 
-### 11. Segurança
+### 11. Security
 
-Aumentaremos a segurança da aplicação permitindo acesso externo somente a determinadas origens e ocultando parâmetros sensíveis.
+We will increase application security by allowing external access only to certain sources and hiding sensitive parameters.
 
-Inicialmente iremos dar permissão a acesso externo. No arquivo config/initializers/cors.rb para:
+Initially we will allow external access. In the config/initializers/cors.rb file to:
 
 ```ruby
-# Configuração global para lidar com CORS (Cross-Origin Resource Sharing)
+# Global configuration to handle CORS (Cross-Origin Resource Sharing)
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
-  # Permite solicitações de qualquer origem
+  # Allow requests from any origin
   allow do
-    # Origens permitidas
+    # Allowed origins
     origins '*'
-    # Recurso permitido
+    # Feature allowed
     resource '*',
-             # Permite todos os cabeçalhos
+             # Allow all headers
              headers: :any,
-             # Métodos HTTP permitidos
+             # Allowed HTTP methods
              methods: %i[get post put patch delete options head],
-             # Expor os seguintes cabeçalhos nas respostas
+             # Expose the following headers in responses
              expose: %w[access-token expiry token-type uid client],
-             # Define a idade máxima para as respostas em cache (0 para desativar o cache)
+             # Set the maximum age for cached responses (0 to disable caching)
              max_age: 0
   end
 end
 ```
 
-E config/initializers/filter_parameter_logging.rb
+And config/initializers/filter_parameter_logging.rb
 
 ```ruby
 Rails.application.config.filter_parameters += [
@@ -640,33 +678,52 @@ Rails.application.config.filter_parameters += [
 ]
 ```
 
-Reinicie o servidor e o guard, rode novamente.
+Restart the server and guard, run again.
 
 ## Extras
 
-Aqui vão alguns comandos úteis que estão disponíveis por conta de gems:
+Here are some useful commands that are available through gems:
 
-**Irá gerar um arquivo com as possíveis falhas de segurança em seu projeto**:
+**It will generate a file with possible security flaws in your project**:
 
 ```bash
 brakeman -o coverage/output.html
 ```
 
-**Gera comentários úteis em seus arquivos**:
+**Generates useful comments on your files**:
 
 ```bash
 annotate
 ```
 
-**Eu gosto muito do editor visual studio, então algumas das extensões que utilizo**:
+**settings for visual studio**:
 
+You can add the file in root of your project with the name **settings.json** and add the following code (**But change the rvm configurations**):
 
+```json
+{
+  "rufo": "/usr/share/rvm/gems/ruby-3.2.1/bin/rufo",
+  "editor.formatOnSave": true,
+  "rubocop.autocorrect": true,
+  "rubocop.safeAutocorrect": false,
+  "rubocop.layoutMode": true,
+  "rubocop.commandPath": "/usr/share/rvm/gems/ruby-3.2.1/bin/rufo",
+  "ruby.rubocop.onSave": true,
+  "editor.formatOnSaveTimeout": 5000,
+  "files.associations": {
+    "*.erb": "erb"
+  },
+  "ruby.rubocop.executePath": "/usr/share/rvm/gems/ruby-3.2.1/bin/rufo"
+}
+```
 
-## Pré-requisitos
+**I really like the visual studio editor, so some of the extensions I use**:
 
-- Conhecimento básico de Ruby e programação web.
-- Instalação do RVM.
-- Ter o Ruby, o Rails e o NGrok instalados na máquina a partir do RVM.
-- Docker para initiciliar os serviços que encontram na pasta docker-compose
+## Prerequisites
 
-Ao final deste curso, você estará apto a desenvolver uma aplicação web, API, utilizando Ruby on Rails, implementar testes automatizados para garantir a qualidade do código e expor o projeto para acesso externo utilizando o NGrok.
+- Basic knowledge of Ruby and web programming.
+- Installation of RVM.
+- Have Ruby, Rails and NGrok installed on the machine from RVM.
+- Docker to start the services found in the docker-compose folder
+
+At the end of this course, you will be able to develop a web application, API, using Ruby on Rails, implement automated tests to ensure code quality and expose the project for external access using NGrok.
