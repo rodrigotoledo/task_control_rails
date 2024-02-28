@@ -9,7 +9,7 @@ jobs:
     name: RSpec
     runs-on: ubuntu-20.04
     env:
-      APPLICATION_NAME: receita_mais
+      APPLICATION_NAME: task_control
       JWT_KEY: so_difficult_123
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/taks_control_rails_test
