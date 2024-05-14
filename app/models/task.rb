@@ -12,20 +12,10 @@
 class Task < ApplicationRecord
   validates :title, presence: true
 
+  after_create_commit do
+    broadcast_prepend_to 'tasks', target: 'tasks', partial: 'tasks/task', locals: { task: self }
+  end
   broadcasts_refreshes
-  after_create :broadcast_create
 
   has_one_attached :feature_image
-
-  private
-
-  def broadcast_create
-    broadcast_prepend_to self, target: 'tasks', partial: 'tasks/task', locals: { task: self }
-  end
-
-  def feature_image_url
-    return unless feature_image.attached?
-
-    Rails.application.routes.url_helpers.rails_blob_url(feature_image, only_path: true)
-  end
 end

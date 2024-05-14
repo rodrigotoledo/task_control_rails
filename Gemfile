@@ -59,6 +59,9 @@ group :development, :test do
   gem 'shoulda-matchers', require: false
   # Analisa a cobertura de código dos testes
   gem 'simplecov'
+  gem 'rubocop', require: false
+  # Extensão do RuboCop para Rails
+  gem 'rubocop-rails', require: false
 end
 
 group :development do

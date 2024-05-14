@@ -19,6 +19,9 @@
   <div class="my-5">
     <%= form.label :feature_image %>
     <%= form.file_field :feature_image, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <% if task.feature_image.attached? %>
+      <%= image_tag task.feature_image.variant(resize_to_limit: [100, 100]) %>
+    <% end %>
   </div>
 
   <div class="my-5">
@@ -34,4 +37,5 @@
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>
+  
 <% end %>

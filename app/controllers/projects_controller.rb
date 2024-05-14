@@ -9,15 +9,12 @@
 #  updated_at   :datetime         not null
 #
 class ProjectsController < ApplicationController
-  before_action :set_project, only: %i[show edit update destroy]
+  before_action :set_project, only: %i[ edit update destroy]
 
   # GET /projects
   def index
-    @projects = Project.includes(:feature_image_attachment).order(updated_at: :desc)
+    @projects = Project.includes(:feature_image_attachment)
   end
-
-  # GET /projects/1
-  def show; end
 
   # GET /projects/new
   def new
@@ -32,7 +29,7 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
 
     if @project.save
-      redirect_to project_url(@project), notice: 'Project was successfully created.'
+      redirect_to projects_url, notice: 'Project was successfully created.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -41,7 +38,7 @@ class ProjectsController < ApplicationController
   # PATCH/PUT /projects/1
   def update
     if @project.update(project_params)
-      redirect_to project_url(@project), notice: 'Project was successfully updated.'
+      redirect_to projects_url, notice: 'Project was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -50,7 +47,7 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   def destroy
     @project.destroy!
-    redirect_to projects_url, notice: 'Project was successfully destroyed.'
+    redirect_to projects_url, alert: 'Project was successfully destroyed.'
   end
 
   private
@@ -58,6 +55,8 @@ class ProjectsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_project
     @project = Project.find(params[:id])
+  rescue StandardError
+    redirect_to projects_path
   end
 
   # Only allow a list of trusted parameters through.

@@ -10,15 +10,12 @@
 #  updated_at   :datetime         not null
 #
 class TasksController < ApplicationController
-  before_action :set_task, only: %i[show edit update destroy]
+  before_action :set_task, only: %i[edit update destroy]
 
   # GET /tasks
   def index
-    @tasks = Task.includes(:feature_image_attachment).order(updated_at: :desc)
+    @tasks = Task.includes(:feature_image_attachment)
   end
-
-  # GET /tasks/1
-  def show; end
 
   # GET /tasks/new
   def new
@@ -33,7 +30,7 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
 
     if @task.save
-      redirect_to task_url(@task), notice: 'Task was successfully created.'
+      redirect_to tasks_url, notice: 'Task was successfully created.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -42,7 +39,7 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   def update
     if @task.update(task_params)
-      redirect_to task_url(@task), notice: 'Task was successfully updated.'
+      redirect_to tasks_url, notice: 'Task was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -51,7 +48,7 @@ class TasksController < ApplicationController
   # DELETE /tasks/1
   def destroy
     @task.destroy!
-    redirect_to tasks_url, notice: 'Task was successfully destroyed.'
+    redirect_to tasks_url, alert: 'Task was successfully destroyed.'
   end
 
   private
@@ -59,6 +56,8 @@ class TasksController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_task
     @task = Task.find(params[:id])
+  rescue
+    redirect_to tasks_path
   end
 
   # Only allow a list of trusted parameters through.

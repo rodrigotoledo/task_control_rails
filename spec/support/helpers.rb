@@ -1,8 +1,17 @@
+# frozen_string_literal: true
+
 require 'factory_bot_rails'
 require 'simplecov'
 require 'shoulda/matchers'
+module ResponseHelpers
+  def json_response
+    JSON.parse(response.body, symbolize_names: true)
+  end
+end
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
+  config.include ResponseHelpers, type: :request
 end
 SimpleCov.start 'rails' do
   add_filter 'vendor'
