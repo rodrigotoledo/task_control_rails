@@ -3,5 +3,8 @@
 
   <%= render "form", project: @project %>
 
-  <%= link_to "Back to projects", projects_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  <%= link_to "Back to projects", projects_path, class: "rounded-lg py-3 ml-2 px-5 bg-blue-400 inline-block font-medium text-white" %>
+  <div class="inline-block ml-2">
+    <%= button_to "Destroy this project", project_path(@project), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-red-800 text-white font-medium", form: { data: { turbo_confirm: 'Are you sure?' } } %>
+  </div>
 </div>

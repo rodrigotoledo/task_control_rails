@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: projects
@@ -9,11 +11,11 @@
 #  updated_at   :datetime         not null
 #
 class ProjectsController < ApplicationController
-  before_action :set_project, only: %i[ edit update destroy]
+  before_action :set_project, only: %i[edit update destroy]
 
   # GET /projects
   def index
-    @projects = Project.includes(:feature_image_attachment)
+    @projects = Project.includes(:feature_image_attachment).order(created_at: :desc)
   end
 
   # GET /projects/new

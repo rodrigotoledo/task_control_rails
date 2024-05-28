@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: tasks
@@ -14,7 +16,7 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
-    @tasks = Task.includes(:feature_image_attachment)
+    @tasks = Task.includes(:feature_image_attachment).order(created_at: :desc)
   end
 
   # GET /tasks/new
@@ -56,7 +58,7 @@ class TasksController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_task
     @task = Task.find(params[:id])
-  rescue
+  rescue StandardError
     redirect_to tasks_path
   end
 
