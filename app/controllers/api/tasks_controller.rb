@@ -52,7 +52,7 @@ module Api
     end
 
     def task_params
-      params.permit(:title, :scheduled_at, :completed_at, :feature_image)
+      params.except(:id).permit(:title, :scheduled_at, :completed_at, :feature_image)
     end
   end
 end

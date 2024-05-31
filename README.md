@@ -1,19 +1,19 @@
 # Course: Application Development with Ruby on Rails - Tasks Control
 
-In this course, we will learn how to develop a web application using the Ruby on Rails framework, called Tasks Control. Throughout this course, we will cover everything from installing the necessary technologies to exposing the project for external access using NGrok.
+In this course, we will learn how to develop a web application using the Ruby on Rails framework, called Tasks Control. Throughout this course, we will cover everything from installing the necessary technologies to exposing the project for external access using Tunnelmole.
 
 ## Technologies Used
 
 - **Ruby on Rails**: MVC web framework for rapid development of web applications in Ruby.
 - **Docker**: The need for Docker in the Rails project is to ensure consistent development and deployment environments across different systems.
-- **NGrok**: Tool for creating tunnels that allows you to expose local projects for external access.
+- **Tunnelmole**: Tool for creating tunnels that allows you to expose local projects for external access.
 
 ## Course Differences
 
 - Installation and use of RVM for Ruby version control and environment management.
 - Implementation of data manipulation through browser and API, reflecting changes in real time.
 - Complete test coverage using RSpec to ensure code quality.
-- Use of NGrok to expose the project for external access, facilitating development and integration with other applications.
+- Use of Tunnelmole to expose the project for external access, facilitating development and integration with other applications.
 
 ## Course content
 
@@ -32,7 +32,7 @@ With RVM installed, let's create and initialize the Rails project environment:
 ```bash
 rvm use 3.2.1@tasks_control --create
 gem install rails --no-doc
-rails new tasks_control -d postgresql -T
+rails new tasks_control --css tailwind --database=postgresql -T
 ```
 
 With this, the latest version of the Rails framework will be installed in the project's environment (gemset).
@@ -60,6 +60,7 @@ Feel free to update with your data.
 So to start the project, let's run it inside the folder:
 
 ```bash
+gem install foreman --no-doc
 bundle install
 rails db:drop db:create db:migrate
 rails s
@@ -111,21 +112,12 @@ gem 'redis', '>= 4.0.1'
 gem 'rubocop', require: false
 # RuboCop extension for Rails
 gem 'rubocop-rails', require: false
-# Tailwind CSS Framework for Rails
-gem 'tailwindcss-rails'
 ```
 
 Stopping the server, then run:
 
 ```bash
 bundle install
-```
-
-Let's let the look of our project follow the TailwindCSS framework, so run:
-
-```bash
-rails tailwindcss:install
-gem install foreman
 ```
 
 From this moment on, we will not start the project with the `rails s` command but rather with `bin/dev`.
@@ -182,7 +174,9 @@ We will configure the development environment to run automated tests using Guard
 As we will be running tests, the application needs to accept requests in a development environment from any host. This is due to the `rack-cors` gem. Then in the file config/environments/development.rb insert the content before closing `end`
 
 ```ruby
-config.hosts.clear
+  config.hosts.clear
+  config.hosts << /.*\.tunnelmole\.net/
+  config.action_controller.allow_forgery_protection = false
 ```
 
 You may have noticed that we are using Guard for TDD development, so edit the `Guardfile` file and look for the line:
@@ -282,18 +276,34 @@ rails g controller api/tasks
 rails g controller api/projects
 ```
 
+Note that controller test files will also be created by requests. Therefore, in the `spec/requests` folder we will concentrate the request tests for both the rails application and the `API`.
+
+
+### 7. Routing
+
 Then open the config/routes.rb file and add
 
 ```ruby
-namespace :api do
-  resources :tasks, only: [:index, :update]
-  resources :projects, only: [:index, :update]
+Rails.application.routes.draw do
+  resources :tasks, except: :show
+  resources :projects, except: :show
+  namespace :api do
+    resources :tasks, only: %i[index show create update destroy] do
+      member do
+        patch :mark_as_completed
+      end
+    end
+    resources :projects, only: %i[index show create update destroy] do
+      member do
+        patch :mark_as_completed
+      end
+    end
+  end
+  root 'tasks#index'
 end
 ```
 
-Note that controller test files will also be created by requests. Therefore, in the `spec/requests` folder we will concentrate the request tests for both the rails application and the `API`.
-
-### 7. Test Development
+### 8. Test Development
 
 Let's start Guard so that everything from now on is tested and we can guarantee `TDD`-oriented development
 
@@ -515,7 +525,7 @@ Once again, with Guard running, press `Enter` on the application and everything 
 
 Just start with `bin/dev`
 
-### 8. Broadcasting - Real-time actions
+### 9. Broadcasting - Real-time actions
 
 In Rails, real-time actions have always been a topic to be discussed. What would be the best proposal and suddenly Rails core came up with the idea and solution called `broadcasting`.
 
@@ -601,7 +611,7 @@ In the controller app/controllers/projects_controller.rb we will change the `ind
 @tasks = Task.order(updated_at: :desc)
 ```
 
-### 9. Placing navigation between screens
+### 10. Placing navigation between screens
 
 As an extra, code to navigate between screens will be added.
 First we add the font-awesome icon library to the layout header and then the navigation.
@@ -633,17 +643,17 @@ And for navigation add above `<main></main>`
 </nav>
 ```
 
-### 10. Exposing the Project with NGrok
+### 11. Exposing the Project with Tunnelmole
 
-We will use NGrok to expose the project locally, allowing external access to the application's endpoints.
+We will use Tunnelmole to expose the project locally, allowing external access to the application's endpoints.
 
-First, go to `https://ngrok.com/`, if possible, register, download and install `ngrok` on your machine. After doing this, if the `Rails` project is running, type the command in another terminal tab:
+First, go to `https://tunnelmole.com/tunnelmole-getting-started-guide/`, if possible, register, download and install `Tunnelmole` on your machine. After doing this, if the `Rails` project is running, type the command in another terminal tab:
 
 ```bash
-ngrok http 3000
+tmole 3000
 ```
 
-### 11. Security
+### 12. Security
 
 We will increase application security by allowing external access only to certain sources and hiding sensitive parameters.
 
@@ -723,7 +733,7 @@ You can add the file in root of your project with the name **settings.json** and
 
 - Basic knowledge of Ruby and web programming.
 - Installation of RVM.
-- Have Ruby, Rails and NGrok installed on the machine from RVM.
+- Have Ruby, Rails and Tunnelmole installed on the machine from RVM.
 - Docker to start the services found in the docker-compose folder
 
-At the end of this course, you will be able to develop a web application, API, using Ruby on Rails, implement automated tests to ensure code quality and expose the project for external access using NGrok.
+At the end of this course, you will be able to develop a web application, API, using Ruby on Rails, implement automated tests to ensure code quality and expose the project for external access using Tunnelmole.
