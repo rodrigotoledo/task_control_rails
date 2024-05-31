@@ -52,7 +52,7 @@ module Api
     end
 
     def project_params
-      params.permit(:title, :completed_at, :feature_image)
+      params.except(:id).permit(:title, :completed_at, :feature_image)
     end
   end
 end
