@@ -84,3 +84,4 @@ gem 'rubocop', require: false
 gem 'rubocop-rails', require: false
 # Framework CSS Tailwind CSS para Rails
 gem 'tailwindcss-rails'
+gem 'solargraph'
