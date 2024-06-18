@@ -45,43 +45,44 @@ gem 'bootsnap', require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 
 group :development, :test do
-  # Ferramenta para debugar
+  # Tool for debugging
   gem 'byebug', '~> 11.1'
-  # Carrega variáveis de ambiente a partir de um arquivo .env
+  # Loads environment variables from a .env file
   gem 'dotenv-rails'
-  # Facilita a criação de mocks de objetos em testes
+  # Facilitates the creation of test object mocks
   gem 'factory_bot_rails'
-  # Gera dados falsos para testes
+  # Generates fake data for tests
   gem 'faker', '~> 3.2'
-  # Guarda e executa automaticamente os testes
+  # Automatically runs tests
   gem 'guard-rspec', '~> 4.7'
-  # Framework de testes RSpec
+  # RSpec testing framework
   gem 'rspec-rails'
-  # Adiciona suporte para testes com shoulda-matchers
+  # Adds support for tests with shoulda-matchers
   gem 'shoulda-matchers', require: false
-  # Analisa a cobertura de código dos testes
+  # Analyzes test coverage
   gem 'simplecov'
 end
 
 group :development do
-  # Anota os modelos com informações do schema do banco de dados
+  # Annotates models with database schema information
   gem 'annotate'
-  # Ferramenta de segurança para Rails
+  # Security tool for Rails
   gem 'brakeman'
-  # Ajuda a detectar queries N+1 em ActiveRecord
+  # Helps detect N+1 queries in ActiveRecord
   gem 'bullet'
 end
 
-# Processamento de imagens
+# Image processing
 gem 'image_processing', '~> 1.2'
-# Configuração de CORS para Rack
+# CORS configuration for Rack
 gem 'rack-cors', '~> 2.0'
-# Banco de dados chave-valor em memória
+# In-memory key-value database
 gem 'redis', '>= 4.0.1'
-# Ferramenta de análise estática de código Ruby
+# Static code analysis tool for Ruby
 gem 'rubocop', require: false
-# Extensão do RuboCop para Rails
+# RuboCop extension for Rails
 gem 'rubocop-rails', require: false
-# Framework CSS Tailwind CSS para Rails
+# Tailwind CSS framework for Rails
 gem 'tailwindcss-rails'
+# Ruby language server
 gem 'solargraph'
