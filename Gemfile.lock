@@ -92,6 +92,13 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
+    cable_ready (5.0.5)
+      actionpack (>= 5.2)
+      actionview (>= 5.2)
+      activesupport (>= 5.2)
+      observer (~> 0.1)
+      railties (>= 5.2)
+      thread-local (>= 1.1.0)
     coderay (1.1.3)
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
@@ -194,9 +201,12 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.2-x86_64-linux)
       racc (~> 1.4)
+    nokogiri-html5-inference (0.3.0)
+      nokogiri (~> 1.14)
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    observer (0.1.2)
     parallel (1.24.0)
     parser (3.3.0.5)
       ast (~> 2.4.1)
@@ -261,6 +271,9 @@ GEM
       redis-client (>= 0.17.0)
     redis-client (0.20.0)
       connection_pool
+    redis-session-store (0.11.5)
+      actionpack (>= 6, < 8)
+      redis (>= 3, < 6)
     regexp_parser (2.9.0)
     reline (0.4.2)
       io-console (~> 0.5)
@@ -344,6 +357,17 @@ GEM
       sprockets (>= 3.0.0)
     stimulus-rails (1.3.3)
       railties (>= 6.0.0)
+    stimulus_reflex (3.5.2)
+      actioncable (>= 5.2, < 8)
+      actionpack (>= 5.2, < 8)
+      actionview (>= 5.2, < 8)
+      activesupport (>= 5.2, < 8)
+      cable_ready (~> 5.0)
+      nokogiri (~> 1.0)
+      nokogiri-html5-inference (~> 0.3)
+      rack (>= 2, < 4)
+      railties (>= 5.2, < 8)
+      redis (>= 4.0, < 6.0)
     stringio (3.1.0)
     tailwindcss-rails (2.3.0)
       railties (>= 6.0.0)
@@ -358,6 +382,7 @@ GEM
     tailwindcss-rails (2.3.0-x86_64-linux)
       railties (>= 6.0.0)
     thor (1.3.0)
+    thread-local (1.1.0)
     tilt (2.3.0)
     timeout (0.4.1)
     turbo-rails (2.0.2)
@@ -400,6 +425,7 @@ DEPENDENCIES
   rack-cors (~> 2.0)
   rails (~> 7.1.3)
   redis (>= 4.0.1)
+  redis-session-store (~> 0.11.5)
   rspec-rails
   rubocop
   rubocop-rails
@@ -408,6 +434,7 @@ DEPENDENCIES
   solargraph
   sprockets-rails
   stimulus-rails
+  stimulus_reflex (~> 3.5)
   tailwindcss-rails
   turbo-rails
   tzinfo-data

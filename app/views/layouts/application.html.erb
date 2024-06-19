@@ -9,6 +9,7 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
     <%= javascript_importmap_tags %>
+    <%= action_cable_meta_tag  %>
   </head>
 
   <body>
@@ -17,14 +18,21 @@
         <%= link_to root_path, class: "text-lg font-bold" do %>
           <i class="fas fa-check-double m-2"></i>
         <% end %>
+        <%= form_for :general_search, url: nil, data: { reflex: "submit->GeneralSearchReflex#search" }, html: { class: "flex items-center space-x-2" } do |f| %>
+          <%= f.text_field :query, data: { reflex: "keyup->GeneralSearchReflex#search", reflex_dataset: "combined" }, class: "form-input bg-gray-700 text-white rounded px-2 py-1", placeholder: "Search..." %>
+          <%= hidden_field_tag :current_controller, controller_name %>
+          <%= f.submit "Search", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded" %>
+        <% end %>
         <div class="flex space-x-4">
           <%= link_to tasks_path, class: "flex items-center space-x-2" do %>
             <i class="fas fa-tasks mr-2"></i>
             Tasks
+            <%= completed_count(Task) %>
           <% end %>
           <%= link_to projects_path, class: "flex items-center space-x-2" do %>
             <i class="fas fa-briefcase mr-2"></i>
             Projects
+            <%= completed_count(Project) %>
           <% end %>
         </div>
       </div>

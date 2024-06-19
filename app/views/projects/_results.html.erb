@@ -1,0 +1,6 @@
+<%= turbo_stream_from :projects %>
+<% if results.empty? %>
+  <pre>Ops... without results</pre>
+<% else %>
+<%= render results %>
+<% end %>
