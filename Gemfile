@@ -86,3 +86,7 @@ gem 'rubocop-rails', require: false
 gem 'tailwindcss-rails'
 # Ruby language server
 gem 'solargraph'
+
+gem "stimulus_reflex", "~> 3.5"
+
+gem "redis-session-store", "~> 0.11.5"

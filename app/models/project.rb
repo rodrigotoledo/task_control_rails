@@ -9,6 +9,7 @@
 #  updated_at   :datetime         not null
 #
 class Project < ApplicationRecord
+  include Completable
   validates :title, presence: true
 
   after_create_commit do
