@@ -41,7 +41,8 @@ module Api
     end
 
     def mark_as_completed
-      @project.update(completed_at: Time.zone.now)
+      @project.completed_at = Time.zone.now
+      @project.save
       head :ok
     end
 

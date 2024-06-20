@@ -1,9 +1,6 @@
 <%= turbo_stream_from project %>
-<div id="<%= dom_id project %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Title:</strong>
-    <%= project.title %>
-  </p>
+<%= turbo_frame_tag dom_id(project) do %>
+  <h1 class="my-5 block font-bold text-xl"><%= project.title %></h1>
 
   <p class="my-5">
     <% if project.feature_image.attached? %>
@@ -13,15 +10,14 @@
     <% end %>
   </p>
 
-
   <p class="my-5">
-    <strong class="block font-medium mb-1">Completed at:</strong>
+    <strong class="block font-bold mb-1">Completed at:</strong>
     <%= l(project.completed_at, format: :long) unless project.completed_at.blank? %>
   </p>
 
-  <%= link_to "Edit this project", edit_project_path(project), class: "rounded-lg py-3 px-5 bg-blue-400 inline-block font-medium text-white" %>
+  <%= link_to "Edit this project", edit_project_path(project), class: "rounded-lg py-3 px-5 bg-blue-400 inline-block font-bold text-white", data: { turbo_frame: "_top" } %>
   <div class="inline-block ml-2">
-    <%= button_to "Destroy this project", project_path(project), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-red-800 text-white font-medium", form: { data: { turbo_confirm: 'Are you sure?' } } %>
+    <%= button_to "Destroy this project", project_path(project), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-red-800 text-white font-bold", form: { data: { turbo_frame: "_top", turbo_confirm: 'Are you sure?' } } %>
   </div>
   <hr class="mt-6">
-</div>
+<% end %>

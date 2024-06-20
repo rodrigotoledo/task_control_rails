@@ -41,7 +41,8 @@ module Api
     end
 
     def mark_as_completed
-      @task.update(completed_at: Time.zone.now)
+      @task.completed_at = Time.zone.now
+      @task.save
       head :ok
     end
 

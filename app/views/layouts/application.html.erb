@@ -23,17 +23,9 @@
           <%= hidden_field_tag :current_controller, controller_name %>
           <%= f.submit "Search", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded" %>
         <% end %>
-        <div class="flex space-x-4">
-          <%= link_to tasks_path, class: "flex items-center space-x-2" do %>
-            <i class="fas fa-tasks mr-2"></i>
-            Tasks
-            <%= completed_count(Task) %>
-          <% end %>
-          <%= link_to projects_path, class: "flex items-center space-x-2" do %>
-            <i class="fas fa-briefcase mr-2"></i>
-            Projects
-            <%= completed_count(Project) %>
-          <% end %>
+        <%=turbo_stream_from :results_in_header %>
+        <div id="results_in_header">
+          <%=render partial: 'layouts/results_in_header' %>
         </div>
       </div>
     </nav>

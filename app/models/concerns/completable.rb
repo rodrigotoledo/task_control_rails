@@ -12,16 +12,4 @@ module Completable
       where.not(completed_at: nil).count
     end
   end
-
-  def complete!
-    update(completed_at: Time.current)
-  end
-
-  def incomplete!
-    update(completed_at: nil)
-  end
-
-  def completed?
-    completed_at.present?
-  end
 end
