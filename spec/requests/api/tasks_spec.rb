@@ -43,6 +43,18 @@ RSpec.describe 'Api::Tasks', type: :request do
       end
     end
 
+    describe 'PATCH /tasks/:id/mark_as_incompleted' do
+      it 'marks a task as completed' do
+        task = create(:task, completed_at: Time.zone.now)
+
+        patch mark_as_incompleted_api_task_path(task.id)
+        task.reload
+
+        expect(response).to have_http_status(200)
+        expect(task.completed_at).to be_nil
+      end
+    end
+
     describe 'POST /api/tasks' do
       it 'creates a new task' do
         post api_tasks_url, params: valid_attributes

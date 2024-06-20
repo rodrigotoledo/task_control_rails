@@ -44,6 +44,18 @@ RSpec.describe 'Api::Projects', type: :request do
       end
     end
 
+    describe 'PATCH /projects/:id/mark_as_incompleted' do
+      it 'marks a project as completed' do
+        project = create(:project, completed_at: Time.zone.now)
+
+        patch mark_as_incompleted_api_project_path(project.id)
+        project.reload
+
+        expect(response).to have_http_status(200)
+        expect(project.completed_at).to be_nil
+      end
+    end
+
     describe 'POST /api/projects' do
       it 'creates a new project' do
         post api_projects_url, params: valid_attributes

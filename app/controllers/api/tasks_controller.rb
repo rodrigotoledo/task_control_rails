@@ -2,7 +2,7 @@
 
 module Api
   class TasksController < ActionController::API
-    before_action :set_task, only: %i[show update destroy mark_as_completed]
+    before_action :set_task, only: %i[show update destroy mark_as_completed mark_as_incompleted]
     include HasImageUrl
     def index
       tasks = Task.includes(:feature_image_attachment).order(created_at: :desc)
@@ -42,6 +42,12 @@ module Api
 
     def mark_as_completed
       @task.completed_at = Time.zone.now
+      @task.save
+      head :ok
+    end
+
+    def mark_as_incompleted
+      @task.completed_at = nil
       @task.save
       head :ok
     end

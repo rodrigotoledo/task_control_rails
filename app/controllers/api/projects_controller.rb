@@ -2,7 +2,7 @@
 
 module Api
   class ProjectsController < ActionController::API
-    before_action :set_project, only: %i[show update destroy mark_as_completed]
+    before_action :set_project, only: %i[show update destroy mark_as_completed mark_as_incompleted]
     include HasImageUrl
     def index
       projects = Project.includes(:feature_image_attachment).order(created_at: :desc)
@@ -42,6 +42,12 @@ module Api
 
     def mark_as_completed
       @project.completed_at = Time.zone.now
+      @project.save
+      head :ok
+    end
+
+    def mark_as_incompleted
+      @project.completed_at = nil
       @project.save
       head :ok
     end
