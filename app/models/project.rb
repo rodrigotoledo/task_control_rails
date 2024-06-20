@@ -14,17 +14,17 @@ class Project < ApplicationRecord
 
   after_create_commit do
     broadcast_prepend_to "projects", target: "projects", partial: "projects/project", locals: { project: self }
-    broadcast_replace_to "results_in_header", target: "results_in_header",
+    broadcast_update_to "results_in_header", target: "results_in_header",
                                               partial: "layouts/results_in_header"
   end
   after_update_commit do
     broadcast_replace_to self, partial: "projects/project", locals: { project: self }
-    broadcast_replace_to "results_in_header", target: "results_in_header",
+    broadcast_update_to "results_in_header", target: "results_in_header",
                                               partial: "layouts/results_in_header"
   end
   after_destroy_commit do
     broadcast_remove_to self
-    broadcast_replace_to "results_in_header", target: "results_in_header",
+    broadcast_update_to "results_in_header", target: "results_in_header",
                                               partial: "layouts/results_in_header"
   end
 
