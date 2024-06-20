@@ -6,6 +6,7 @@ module Api
     include HasImageUrl
     def index
       tasks = Task.includes(:feature_image_attachment).order(created_at: :desc)
+      tasks = tasks.where('title ILIKE ?', "%#{params[:query]}%") if params[:query].present?
       tasks = tasks.map do |task|
         with_image_url(task, :feature_image)
       end
