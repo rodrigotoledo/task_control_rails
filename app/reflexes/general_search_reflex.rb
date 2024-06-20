@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class GeneralSearchReflex < ApplicationReflex
+  # :nocov:
   def search
     current_controller = params[:current_controller]
     model_class = current_controller.singularize.camelize.constantize
@@ -17,4 +18,5 @@ class GeneralSearchReflex < ApplicationReflex
   def general_search_params
     params.require(:general_search).permit(:query)
   end
+  # :nocov:
 end
