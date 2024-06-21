@@ -18,11 +18,11 @@
         <%= link_to root_path, class: "text-lg font-bold" do %>
           <i class="fas fa-check-double m-2"></i>
         <% end %>
-        <%= form_for :general_search, url: nil, data: { reflex: "submit->GeneralSearchReflex#search" }, html: { class: "flex items-center space-x-2" } do |f| %>
-          <%= f.text_field :query, data: { reflex: "keyup->GeneralSearchReflex#search", reflex_dataset: "combined" }, class: "form-input bg-gray-700 text-white rounded px-2 py-1", placeholder: "Search..." %>
-          <%= hidden_field_tag :current_controller, controller_name %>
-          <%= f.submit "Search", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded" %>
-        <% end %>
+      <%= form_for :general_search, url: nil, data: { reflex: "submit->GeneralSearchReflex#search" }, html: { class: "flex items-center space-x-2" } do |f| %>
+        <%= f.text_field :query, data: { reflex: "keyup->GeneralSearchReflex#search", reflex_dataset: "combined" }, class: "form-input bg-gray-700 text-white rounded px-2 py-1", placeholder: "Search..." %>
+        <%= hidden_field_tag :current_controller, controller_name %>
+        <%= f.submit "Search", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded" %>
+      <% end %>
         <%=turbo_stream_from :results_in_header %>
         <div id="results_in_header">
           <%=render partial: 'layouts/results_in_header' %>
