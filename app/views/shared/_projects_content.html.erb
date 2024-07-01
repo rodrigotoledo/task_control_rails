@@ -1,0 +1,5 @@
+<%= link_to projects_path, class: "flex items-center space-x-2" do %>
+  <i class="fas fa-briefcase mr-2"></i>
+  Projects
+  <%= completed_count(Project) %>
+<% end %>

@@ -24,15 +24,15 @@
           <%= f.submit "Search", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded" %>
         <% end %>
         <div class="flex space-x-4">
-          <%= link_to tasks_path, class: "flex items-center space-x-2" do %>
-            <i class="fas fa-tasks mr-2"></i>
-            Tasks
-            <%= completed_count(Task) %>
+          <%=turbo_stream_from "update_counts" %>
+          <%= turbo_frame_tag 'tasks_frame' do %>
+            <%= render partial: 'shared/tasks_content' %>
           <% end %>
-          <%= link_to projects_path, class: "flex items-center space-x-2" do %>
-            <i class="fas fa-briefcase mr-2"></i>
-            Projects
-            <%= completed_count(Project) %>
+
+          <%= turbo_frame_tag 'projects_frame' do %>
+            <div id="projects">
+              <%= render partial: 'shared/projects_content' %>
+            </div>
           <% end %>
         </div>
       </div>
