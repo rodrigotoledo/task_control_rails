@@ -96,6 +96,7 @@ config.cache_store = :redis_cache_store, {
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
   config.hosts << /.*\.tunnelmole\.net/
+  config.hosts << %r{.+\.ngrok-free.app$}
   config.hosts << 'localhost'
   config.action_controller.allow_forgery_protection = false
 end
