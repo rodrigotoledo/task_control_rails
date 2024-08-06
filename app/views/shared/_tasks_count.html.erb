@@ -1,0 +1,5 @@
+<%= link_to tasks_path, class: "flex items-center space-x-2" do %>
+  <i class="fas fa-tasks mr-2"></i>
+  Tasks
+  <%= completed_count(Task) %>
+<% end %>
