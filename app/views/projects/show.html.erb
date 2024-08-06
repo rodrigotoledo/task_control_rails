@@ -1,4 +1,5 @@
 <div class="mx-auto w-full">
+  <%= turbo_stream_from dom_id(@project) %>
   <%= render @project %>
 
   <%= link_to "Edit this project", edit_project_path(@project), class: "mt-2 rrounded-lg py-3 px-5 bg-blue-400 inline-block font-medium text-white" %>
