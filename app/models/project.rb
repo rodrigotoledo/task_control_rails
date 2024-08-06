@@ -12,10 +12,11 @@ class Project < ApplicationRecord
   include Completable
   validates :title, presence: true
 
-  after_create_commit do
-    broadcast_prepend_to 'projects', target: 'projects', partial: 'projects/project', locals: { project: self }
-  end
-  broadcasts_refreshes
+  after_create_commit { broadcast_prepend_to 'projects', target: 'projects', partial: 'projects/project', locals: { project: self }}
+
+  after_update_commit { broadcast_update_to "projects", target: "project_#{self.id}", partial: "projects/project", locals: { project: self } }
+
+  after_destroy_commit { broadcast_remove_to "projects", target: "project_#{self.id}" }
 
   has_one_attached :feature_image
 end
