@@ -4,8 +4,8 @@
     <%= link_to "New project", new_project_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
   </div>
 
-
+  <%= turbo_stream_from :projects %>
   <div id="results" class="min-w-full">
-    <%=render partial: 'results', locals: {results: @projects} %>
+    <%=render @projects %>
   </div>
 </div>
