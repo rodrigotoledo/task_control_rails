@@ -1,6 +1,12 @@
 version: "3.8"
 
 services:
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+
   db:
     container_name: postgresql_container
     image: postgres:13
@@ -12,6 +18,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - pg_data:/var/lib/postgresql/data
+
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
@@ -23,6 +30,14 @@ services:
       - "5050:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+
+  mailcatcher:
+    restart: always
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
 volumes:
   pg_data:
   pgadmin_data:

@@ -19,9 +19,9 @@
     <%= l(project.completed_at, format: :long) unless project.completed_at.blank? %>
   </p>
 
-  <%= link_to "Edit this project", edit_project_path(project), class: "rounded-lg py-3 px-5 bg-blue-400 inline-block font-medium text-white" %>
-  <div class="inline-block ml-2">
-    <%= button_to "Destroy this project", project_path(project), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-red-800 text-white font-medium", form: { data: { turbo_confirm: 'Are you sure?' } } %>
+  <div class="flex space-x-2">
+    <%= link_to "Edit this project", edit_project_path(project), class: "rounded-lg py-3 px-5 bg-blue-400 inline-block font-medium text-white" %>
+    <%= button_to "Destroy this project", project_path(project), method: :delete, class: "rounded-lg py-3 px-5 bg-red-800 text-white font-medium", form: { data: { turbo_confirm: 'Are you sure?' } } %>
   </div>
   <hr class="mt-6">
 </div>

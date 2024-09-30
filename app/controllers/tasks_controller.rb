@@ -12,7 +12,7 @@
 #  updated_at   :datetime         not null
 #
 class TasksController < ApplicationController
-  before_action :set_task, only: %i[edit update destroy]
+  before_action :set_task, only: %i[edit update destroy toggle_completed_at]
 
   # GET /tasks
   def index
@@ -32,7 +32,7 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
 
     if @task.save
-      redirect_to tasks_url, notice: 'Task was successfully created.'
+      redirect_to tasks_path, notice: 'Task was successfully created.'
     else
       render :new, status: :unprocessable_entity
     end
@@ -41,16 +41,21 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   def update
     if @task.update(task_params)
-      redirect_to tasks_url, notice: 'Task was successfully updated.'
+      redirect_to tasks_path, notice: 'Task was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
+  def toggle_completed_at
+    @task.update!(completed_at: @task.completed_at.blank? ? Time.current : nil)
+    redirect_to tasks_path, notice: 'Task was successfully updated.'
+  end
+
   # DELETE /tasks/1
   def destroy
     @task.destroy!
-    redirect_to tasks_url, alert: 'Task was successfully destroyed.'
+    redirect_to tasks_path, alert: 'Task was successfully destroyed.'
   end
 
   private

@@ -97,6 +97,8 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
   config.hosts << /.*\.tunnelmole\.net/
   config.hosts << %r{.+\.ngrok-free.app$}
+  config.hosts << /.*\.ngrok\.free.app$/
+  config.hosts << '9ebd-45-71-76-107.ngrok-free.app'
   config.hosts << 'localhost'
   config.action_controller.allow_forgery_protection = false
 end
