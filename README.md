@@ -6,18 +6,19 @@ In this course, we will learn how to develop a web application using the Ruby on
 
 - **Ruby on Rails**: MVC web framework for rapid development of web applications in Ruby.
 - **Docker**: The need for Docker in the Rails project is to ensure consistent development and deployment environments across different systems.
-- **Tunnelmole**: Tool for creating tunnels that allows you to expose local projects for external access.
+- **Ngrok**: Tool for creating tunnels that allows you to expose local projects for external access.
 
 ## Course Differences
 
-- Installation and use of RVM for Ruby version control and environment management.
+- Installation and use of ASDF for Ruby version control and environment management.
 - Implementation of data manipulation through browser and API, reflecting changes in real time.
 - Complete test coverage using RSpec to ensure code quality.
-- Use of Tunnelmole to expose the project for external access, facilitating development and integration with other applications.
+- Use of Ngrok to expose the project for external access, facilitating development and integration with other applications.
+
 
 ## Course content
 
-### 1. Installing RVM
+### 1. Docker
 
 RVM will be used to manage Ruby versions and development environments. It will be installed using the following procedure:
 
