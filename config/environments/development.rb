@@ -1,16 +1,16 @@
-require 'active_support/core_ext/integer/time'
-require 'bullet'
+require "active_support/core_ext/integer/time"
+require "bullet"
 Rails.application.configure do
   config.session_store :redis_session_store,
                        serializer: :json,
                        on_redis_down: ->(*a) { Rails.logger.error("Redis down! #{a.inspect}") },
                        redis: {
                          expire_after: 120.minutes,
-                         key_prefix: 'session:',
-                         url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/1' }
+                         key_prefix: "session:",
+                         url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }
                        }
-  config.action_controller.default_url_options = { host: 'localhost', port: 3000 }
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_controller.default_url_options = {host: "localhost", port: 3000}
+  config.action_mailer.default_url_options = {host: "localhost", port: 3000}
 
   config.after_initialize do
     Bullet.enable        = true
@@ -38,15 +38,15 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp/caching-dev.txt').exist?
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :redis_cache_store, {
-      url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/1' }
+      url: ENV.fetch("REDIS_URL") { "redis://localhost:6379/1" }
     }
     config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+      "Cache-Control" => "public, max-age=#{2.days.to_i}"
     }
   else
     config.action_controller.perform_caching = false
@@ -96,9 +96,10 @@ Rails.application.configure do
   config.hosts.clear # Limpa a lista de hosts permitidos
   config.action_controller.raise_on_missing_callback_actions = true
   config.hosts << /.*\.tunnelmole\.net/
-  config.hosts << %r{.+\.ngrok-free.app$}
+  config.hosts << /.+\.ngrok-free.app$/
   config.hosts << /.*\.ngrok\.free.app$/
-  config.hosts << '9ebd-45-71-76-107.ngrok-free.app'
-  config.hosts << 'localhost'
+  config.hosts << "9ebd-45-71-76-107.ngrok-free.app"
+  config.hosts << "8322-45-71-76-107.ngrok-free.app"
+  config.hosts << "localhost"
   config.action_controller.allow_forgery_protection = false
 end
